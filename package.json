@@ -24,12 +24,12 @@
       {
         "title": "Weather Status",
         "properties": {
-          "vscode-weather-status-open-meteo.notifications-info": {
+          "vscode-weather-status-open-meteo.info-notifications": {
             "type": "boolean",
             "default": "true",
             "description": "Show a notification when updating weather settings."
           },
-          "vscode-weather-status-open-meteo.notifications-error": {
+          "vscode-weather-status-open-meteo.error-notifications": {
             "type": "boolean",
             "default": "true",
             "description": "Show a notification if there is a problem updating weather settings."
@@ -43,7 +43,20 @@
             "type": "number",
             "default": "0",
             "description": "Longitude of the location to use in the request for weather conditions."
-          }
+          },
+					"vscode-weather-status-open-meteo.temperature_unit": {
+						"type": "string",
+						"default": "Celsius",
+						"enum": [ 
+							"Celsius", 
+							"Fahrenheit"
+						],
+						"enumDescriptions": [ 
+							"Show temperaturers in degrees Celsius", 
+							"Show temperaturers in degrees Fahrenheit"
+						],
+						"description": "Choose the units to use for temperatures"
+					}
         }
       }
     ]

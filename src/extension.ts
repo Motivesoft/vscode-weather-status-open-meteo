@@ -102,9 +102,13 @@ async function updateWeatherStatus() {
 			timeformat: "unixtime"
 		});
 	
+		if( configuration.get("temperature_unit") === "Fahrenheit") {
+			params.append("temperature_unit", "fahrenheit");
+		}
+
 		// TODO Settings:
-		// - temperature unit, C or F
 		// - windspeed unit, ms or mph or kn or kmh
+		// - whether to label display items
 	
 		const request = "is_day,temperature_2m,wind_speed_10m,wind_direction_10m,relative_humidity_2m,weather_code";
 		let urlWithParams = `${baseUrl}?${params.toString()}&current=${request}`;
