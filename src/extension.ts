@@ -164,7 +164,7 @@ async function updateWeatherStatus() {
 				}
 	
 				statusBarItem.text = `${weatherString}`;
-				statusBarItem.tooltip = `Weather: ${weatherString} updated ${updateTime} ${new Date(updateTime*1000)}`;
+				statusBarItem.tooltip = `Weather: ${weatherString}. Last updated ${new Date(updateTime*1000)}`;
 			} else {
 				throw new Error(`${response.status} ${response.statusText}`);
 			}
