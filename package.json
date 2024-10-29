@@ -55,7 +55,24 @@
 							"Show temperaturers in degrees Celsius", 
 							"Show temperaturers in degrees Fahrenheit"
 						],
-						"description": "Choose the units to use for temperatures"
+						"description": "Choose the unit of measurement to use for temperatures"
+					},
+					"vscode-weather-status-open-meteo.wind_speed_unit": {
+						"type": "string",
+						"default": "Km/h",
+						"enum": [ 
+							"Km/h", 
+							"m/s",
+							"Mph",
+							"Knots"
+						],
+						"enumDescriptions": [ 
+							"Show wind speed in kilometers per hour", 
+							"Show wind speed in meters per second", 
+							"Show wind speed in miles per hour", 
+							"Show wind speed in knots"
+						],
+						"description": "Choose the unit of measurement to use for wind speed"
 					}
         }
       }

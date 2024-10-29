@@ -4,6 +4,18 @@ import * as vscode from 'vscode';
 
 let statusBarItem: vscode.StatusBarItem;
 
+const temperatureUnitMap: Record<string,string> = {
+	"Celsius": "",
+	"Fahrenheit" : "fahrenheit"
+};
+
+const windSpeedUnitMap: Record<string,string> = {
+	"Km/h": "",
+	"m/s": "ms",
+	"Mph": "mph",
+	"Knots" : "kn"
+};
+
 // Map of WMO code to short textual descriptions from https://gist.github.com/stellasphere/9490c195ed2b53c707087c8c2db4ec0c
 const wmoCodeMap: Record<number, [string, string]> = {
     0: ["Sunny", "Clear"],
@@ -101,14 +113,27 @@ async function updateWeatherStatus() {
 			longitude: String(longitude),
 			timeformat: "unixtime"
 		});
+		
+		// Get the programmatic value for temperature units that corresponds to the human-readable setting
+		// Add it as a param if there is a value (e.g. no value required if using the default)
+		const temperatureUnitSetting = String(configuration.get("temperature_unit"));
+		const temperatureUnitParam = temperatureUnitMap[temperatureUnitSetting];
+		if( temperatureUnitParam !== "") {
+			params.append("temperature_unit", temperatureUnitParam);
+		}
 	
-		if( configuration.get("temperature_unit") === "Fahrenheit") {
-			params.append("temperature_unit", "fahrenheit");
+		// Get the programmatic value for wind speed units that corresponds to the human-readable setting
+		// Add it as a param if there is a value (e.g. no value required if using the default)
+		const windSpeedUnitSetting = String(configuration.get("wind_speed_unit"));
+		const windSpeedUnitParam = windSpeedUnitMap[windSpeedUnitSetting];
+		if( windSpeedUnitParam !== "") {
+			params.append("wind_speed_unit", windSpeedUnitParam);
 		}
 
 		// TODO Settings:
-		// - windspeed unit, ms or mph or kn or kmh
 		// - whether to label display items
+
+		// TODO Prompt the user if location unset
 	
 		const request = "is_day,temperature_2m,wind_speed_10m,wind_direction_10m,relative_humidity_2m,weather_code";
 		let urlWithParams = `${baseUrl}?${params.toString()}&current=${request}`;
