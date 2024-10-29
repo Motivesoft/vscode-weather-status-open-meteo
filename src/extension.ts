@@ -132,8 +132,7 @@ async function updateWeatherStatus() {
 
 		// TODO Settings:
 		// - whether to label display items
-
-		// TODO Prompt the user if location unset
+		// - prompt the user if location unset
 	
 		const request = "is_day,temperature_2m,wind_speed_10m,wind_direction_10m,relative_humidity_2m,weather_code";
 		let urlWithParams = `${baseUrl}?${params.toString()}&current=${request}`;
@@ -156,10 +155,12 @@ async function updateWeatherStatus() {
 				// Format the details
 				let weatherString = `${temperature}${temperature_unit} ${wind_speed_10m}${wind_speed_unit} ${data.current.relative_humidity_2m}${data.current_units.relative_humidity_2m}`;
 	
-				// If we can work one out, add a simple descriptive bit of text to describe the current conditions
-				if (data.current.weather_code in wmoCodeMap) {
-					const wmoText = `${wmoCodeMap[data.current.weather_code][data.current.is_day]} `;
-					weatherString = `${wmoText}. ` + weatherString;
+				// If requested, and we can work one out, add a simple descriptive bit of text to describe the current conditions
+				if (configuration.get("show-weather-code")) {
+					if (data.current.weather_code in wmoCodeMap) {
+						const wmoText = `${wmoCodeMap[data.current.weather_code][data.current.is_day]} `;
+						weatherString = `${wmoText}. ` + weatherString;
+					}
 				}
 	
 				statusBarItem.text = `${weatherString}`;

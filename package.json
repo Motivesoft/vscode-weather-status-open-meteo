@@ -24,6 +24,11 @@
       {
         "title": "Weather Status",
         "properties": {
+          "vscode-weather-status-open-meteo.show-weather-code": {
+            "type": "boolean",
+            "default": "true",
+            "description": "Show a short textual description of the weather along with the numeric details."
+          },
           "vscode-weather-status-open-meteo.info-notifications": {
             "type": "boolean",
             "default": "true",
