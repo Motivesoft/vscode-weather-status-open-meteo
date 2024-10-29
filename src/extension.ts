@@ -72,67 +72,83 @@ export function deactivate() {
 }
 
 async function updateWeatherStatus() {
-	vscode.window.showInformationMessage('Updating weather status');
+	const configuration = vscode.workspace.getConfiguration("vscode-weather-status-open-meteo");
+
+	if( configuration.get("notifications-info")) {
+		vscode.window.showInformationMessage('Updating weather status');
+	}
 
 	// Build the URL
 	const baseUrl = 'https://api.open-meteo.com/v1/forecast';
 
-	// TODO Settings:
-	// - latitude
-	// - longitude
-	const latitude  = "0";
-	const longitude = "0";
+	const latitude = configuration.get("latitude");
+	const longitude = configuration.get("longitude");
 
-	const params = new URLSearchParams({
-		latitude: latitude,
-		longitude: longitude,
-		timeformat: "unixtime"
-	});
-
-	// TODO Settings:
-	// - temperature unit, C or F
-	// - windspeed unit, ms or mph or kn or kmh
-
-	const request = "is_day,temperature_2m,wind_speed_10m,wind_direction_10m,relative_humidity_2m,weather_code";
-	let urlWithParams = `${baseUrl}?${params.toString()}&current=${request}`;
-
-	try {
-		console.log(`Issuing call: ${urlWithParams}`);
-		const response = await fetch(urlWithParams);
-		
-		if (response.ok) {
-			const data = await response.json();
-
-			const temperature = data.current.temperature_2m;
-			const temperature_unit = data.current_units.temperature_2m;
-
-			const wind_speed_10m = data.current.wind_speed_10m;
-			const wind_speed_unit = data.current_units.wind_speed_10m;
-
-			const updateTime = data.current.time + data.utc_offset_seconds;
-
-			// Format the details
-			let weatherString = `T:${temperature}${temperature_unit} W:${wind_speed_10m}${wind_speed_unit} H:${data.current.relative_humidity_2m}${data.current_units.relative_humidity_2m}`;
-
-			// If we can work one out, add a simple descriptive bit of text to describe the current conditions
-			if (data.current.weather_code in wmoCodeMap) {
-				const wmoText = `${wmoCodeMap[data.current.weather_code][data.current.is_day]} `;
-			    weatherString = `${wmoText}. ` + weatherString;
-			}
-
-			statusBarItem.text = `${weatherString}`;
-			statusBarItem.tooltip = `Weather: ${weatherString} updated ${updateTime} ${new Date(updateTime*1000)}`;
-		} else {
-			throw new Error(`${response.status} ${response.statusText}`);
+	// Try and determine whether we have a useful configuration
+	if( latitude === '0' || longitude === '0') {
+		// Treat this as an informational message, not an error
+		console.info( "Cannot obtain weather status: Missing latitude/longitude");
+		if( configuration.get("notifications-info")) {
+			vscode.window.showInformationMessage('Cannot obtain weather status: Missing latitude/longitude');
 		}
-	} catch( error ) {
-		console.error(`Failed to update weather status: ${String(error)}`);
-		vscode.window.showErrorMessage(`Failed to update weather status: ${String(error)}`);
 
-		statusBarItem.text = "Weather n/a";
-		statusBarItem.tooltip = `Failed to update weather status: ${String(error)}`;
+		statusBarItem.text = `Weather Status`;
+		statusBarItem.tooltip = `Weather Status: configuration required`;
+	} else {
+		// Ready to go
+		const params = new URLSearchParams({
+			latitude: String(latitude),
+			longitude: String(longitude),
+			timeformat: "unixtime"
+		});
+	
+		// TODO Settings:
+		// - temperature unit, C or F
+		// - windspeed unit, ms or mph or kn or kmh
+	
+		const request = "is_day,temperature_2m,wind_speed_10m,wind_direction_10m,relative_humidity_2m,weather_code";
+		let urlWithParams = `${baseUrl}?${params.toString()}&current=${request}`;
+	
+		try {
+			console.log(`Issuing call: ${urlWithParams}`);
+			const response = await fetch(urlWithParams);
+			
+			if (response.ok) {
+				const data = await response.json();
+	
+				const temperature = data.current.temperature_2m;
+				const temperature_unit = data.current_units.temperature_2m;
+	
+				const wind_speed_10m = data.current.wind_speed_10m;
+				const wind_speed_unit = data.current_units.wind_speed_10m;
+	
+				const updateTime = data.current.time + data.utc_offset_seconds;
+	
+				// Format the details
+				let weatherString = `${temperature}${temperature_unit} ${wind_speed_10m}${wind_speed_unit} ${data.current.relative_humidity_2m}${data.current_units.relative_humidity_2m}`;
+	
+				// If we can work one out, add a simple descriptive bit of text to describe the current conditions
+				if (data.current.weather_code in wmoCodeMap) {
+					const wmoText = `${wmoCodeMap[data.current.weather_code][data.current.is_day]} `;
+					weatherString = `${wmoText}. ` + weatherString;
+				}
+	
+				statusBarItem.text = `${weatherString}`;
+				statusBarItem.tooltip = `Weather: ${weatherString} updated ${updateTime} ${new Date(updateTime*1000)}`;
+			} else {
+				throw new Error(`${response.status} ${response.statusText}`);
+			}
+		} catch( error ) {
+			console.error(`Failed to update weather status: ${String(error)}`);
+			if( configuration.get("notifications-error")) {
+				vscode.window.showErrorMessage(`Failed to update weather status: ${String(error)}`);
+			}
+	
+			statusBarItem.text = "Weather n/a";
+			statusBarItem.tooltip = `Failed to update weather status: ${String(error)}. Click to retry.`;
+		}
 	}
 
-	// Make sure this is visible
+	// Make sure the status bar item is visible
 	statusBarItem.show();
 }

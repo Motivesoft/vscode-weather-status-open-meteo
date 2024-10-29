@@ -19,6 +19,33 @@
         "command": "vscode-weather-status-open-meteo.update",
         "title": "Update weather status"
       }
+    ],
+    "configuration": [
+      {
+        "title": "Weather Status",
+        "properties": {
+          "vscode-weather-status-open-meteo.notifications-info": {
+            "type": "boolean",
+            "default": "true",
+            "description": "Show a notification when updating weather settings."
+          },
+          "vscode-weather-status-open-meteo.notifications-error": {
+            "type": "boolean",
+            "default": "true",
+            "description": "Show a notification if there is a problem updating weather settings."
+          },
+          "vscode-weather-status-open-meteo.latitude": {
+            "type": "number",
+            "default": "0",
+            "description": "Latitude of the location to use in the request for weather conditions."
+          },
+          "vscode-weather-status-open-meteo.longitude": {
+            "type": "number",
+            "default": "0",
+            "description": "Longitude of the location to use in the request for weather conditions."
+          }
+        }
+      }
     ]
   },
   "scripts": {
