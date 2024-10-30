@@ -22,8 +22,8 @@ const windSpeedUnitMap: Record<string,string> = {
 
 // Map of WMO code to short textual descriptions from https://gist.github.com/stellasphere/9490c195ed2b53c707087c8c2db4ec0c
 const wmoCodeMap: Record<number, [string, string]> = {
-    0: ["Sunny", "Clear"],
-    1: ["Mainly Sunny", "Mainly Clear"],
+    0: ["Clear", "Sunny"],
+    1: ["Mainly Clear", "Mainly Sunny"],
     2: ["Partly Cloudy", "Partly Cloudy"],
     3: ["Cloudy", "Cloudy"],
     45: ["Foggy", "Foggy"],
