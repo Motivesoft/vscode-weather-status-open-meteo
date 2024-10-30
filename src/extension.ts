@@ -2,6 +2,10 @@ import * as vscode from 'vscode';
 
 let statusBarItem: vscode.StatusBarItem;
 
+// Command IDs
+const updateCommandId = 'vscode-weather-status-open-meteo.update';
+const setLocationCommandId = 'vscode-weather-status-open-meteo.set-location';
+
 // Empty string here means don't pass anything to API call
 const temperatureUnitMap: Record<string,string> = {
 	"Celsius": "",
@@ -51,23 +55,25 @@ const wmoCodeMap: Record<number, [string, string]> = {
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Extension "vscode-weather-status-open-meteo" is now active');
 
-	// Our update command
-	const commandId = 'vscode-weather-status-open-meteo.update';
-
-	// Register it so it is accessible from the command palette
-	let command = vscode.commands.registerCommand(commandId, () => {
+	// Register the commands so that they accessible from the command palette
+	let updateCommand = vscode.commands.registerCommand(updateCommandId, () => {
 		updateWeatherStatus();
 	});
-	context.subscriptions.push(command);
+	context.subscriptions.push(updateCommand);
+
+	let setLocationCommand = vscode.commands.registerCommand(setLocationCommandId, () => {
+		setLocationConfiguration();
+	});
+	context.subscriptions.push(setLocationCommand);
 
 	// Create the status bar area we will use and associate our update command with it so that 
 	// clicking the item in the status bar will cause an update
 	statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-	statusBarItem.command = commandId;
+	statusBarItem.command = updateCommandId;
 	context.subscriptions.push(statusBarItem);
 
 	// Update the weather status on activating the extension
-	vscode.commands.executeCommand(commandId);
+	vscode.commands.executeCommand(updateCommandId);
 
 	// Cause an update on a regular basis - every 60 minutes
 	// TODO: consider making this configurable, but not too much
@@ -83,9 +89,56 @@ export function deactivate() {
 	}
 }
 
+async function setLocationConfiguration() {
+	let options: vscode.InputBoxOptions = {
+		prompt: "Enter your location as latitude,longitude e.g. 34.567,-0.123",
+		placeHolder: "0,0"
+	};
+	
+	vscode.window.showInputBox(options).then(value => {
+		if (!value) {
+			console.log("No value entered");
+			return;
+		}
+		
+		// Expecting two numbers in the form "33.333,-3.333" 
+		console.log(`Value entered: ${value}`);
+
+		let parts = value.split(",");
+		if( parts.length === 2 ) {
+			const latitude = parseFloat(parts[0].trim());
+			const longitude = parseFloat(parts[1].trim());
+
+			// NaN means that one of these is not a valid number
+			if( Number.isNaN(latitude) || Number.isNaN(longitude) ) {
+				vscode.window.showErrorMessage('Invalid value entered. Settings not changed');
+				return;
+			}
+
+			// 0,0 is not a land location and we use it to signify "no value entered"
+			if( latitude === 0 && longitude === 0 ) {
+				vscode.window.showErrorMessage('Unexpected values entered. Settings not changed');
+				return;
+			}
+
+			const configuration = vscode.workspace.getConfiguration("vscode-weather-status-open-meteo");
+
+			console.log(`Updating settings: latitude=${latitude}, longitude=${longitude}`);
+			configuration.update("latitude", latitude, vscode.ConfigurationTarget.Global);
+			configuration.update("longitude", longitude, vscode.ConfigurationTarget.Global);
+			
+			// Got the values we need. Now we can force an update
+			statusBarItem.command = updateCommandId;
+			vscode.commands.executeCommand(updateCommandId);
+		} else {
+			vscode.window.showErrorMessage('Expecting two values, latitude and longitude, separated by a comma');
+		}
+	});
+}
+
 async function updateWeatherStatus() {
 	const configuration = vscode.workspace.getConfiguration("vscode-weather-status-open-meteo");
-
+	
 	if( configuration.get("infoNotifications")) {
 		vscode.window.showInformationMessage('Updating weather status');
 	}
@@ -93,19 +146,20 @@ async function updateWeatherStatus() {
 	// Build the URL
 	const baseUrl = 'https://api.open-meteo.com/v1/forecast';
 
-	const latitude = configuration.get("latitude");
-	const longitude = configuration.get("longitude");
+	const latitude = configuration.get("latitude") as number;
+	const longitude = configuration.get("longitude") as number;
 
 	// Try and determine whether we have a useful configuration
-	if( latitude === '0' || longitude === '0') {
+	if( latitude === 0 && longitude === 0 ) {
 		// Treat this as an informational message, not an error
 		console.info( "Cannot obtain weather status: Missing latitude/longitude");
 		if( configuration.get("infoNotifications")) {
 			vscode.window.showInformationMessage('Cannot obtain weather status: Missing latitude/longitude');
 		}
 
-		statusBarItem.text = `Weather Status`;
+		statusBarItem.text = `Weather Status: Click to configure`;
 		statusBarItem.tooltip = `Weather Status: configuration required`;
+		statusBarItem.command = setLocationCommandId;
 	} else {
 		// Ready to go
 		const params = new URLSearchParams({
