@@ -4,6 +4,8 @@ Display current weather information on the status bar, using the excellent free 
 
 > Note: This extension is designed as an alternative to [vscode-weather-status](https://github.com/Motivesoft/vscode-weather-status), which uses a different weather service but otherwise offers similar features.
 
+> Note: To use this extension, it will be necessary to determine and configure the latitude and longitude of the location you want the weather for. This can be determined in various way, for example by using an map web application such as Google Maps.  
+
 ## Usage
 
 The extension will automatically start and, if configured with a latitude and longitude to use as a location, will get the current weather for that location and display it in the status bar.
@@ -11,6 +13,8 @@ The extension will automatically start and, if configured with a latitude and lo
 The weather will automatically update every hour and an update can be forced by clicking on the status bar weather display.
 
 Settings can be used to control the displayed weather items and the units used for the display. See [Extension Settings](#extension-settings) for configuration details.
+
+> Note: When the extension first activates, it will offer the user the chance to configure the location to use. The latitude and longitude can be set in the Settings, or by using the `Set Weather Location` command.
 
 ## Features
 
@@ -40,6 +44,8 @@ The extension is heavily dependent on the availability and functionality of the 
 > Note: For the `temperatureUnit` and `windSpeedUnit` properties, the default values are shown, but they also have enumerated options which are not included in this table format. The `temperatureUnit` can be either "Celsius" or "Fahrenheit", while the `windSpeedUnit` can be "Km/h", "m/s", "Mph", or "Knots".
 
 > Note: Unless the latitide and longitude are configured, the extension will not display any weather information.
+
+> Note: There is a command called `Set Weather Location` that can be run from the command palette that allows configuring the latitude and longitude in a single operation.
 
 ## Known Issues
 

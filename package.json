@@ -41,7 +41,7 @@
       },
       {
         "command": "vscode-weather-status-open-meteo.set-location",
-        "title": "Set Weather Status Location"
+        "title": "Set Weather Location"
       }
     ],
     "configuration": [
