@@ -101,7 +101,7 @@ async function setLocationConfiguration() {
 			return;
 		}
 		
-		// Expecting two numbers in the form "33.333,-3.333" 
+		// Expecting two numbers in the form "33.333,-3.333" which we will split into latitude and longitude
 		console.log(`Value entered: ${value}`);
 
 		let parts = value.split(",");
@@ -120,16 +120,16 @@ async function setLocationConfiguration() {
 				vscode.window.showErrorMessage('Unexpected values entered. Settings not changed');
 				return;
 			}
-
-			const configuration = vscode.workspace.getConfiguration("vscode-weather-status-open-meteo");
-
-			console.log(`Updating settings: latitude=${latitude}, longitude=${longitude}`);
-			configuration.update("latitude", latitude, vscode.ConfigurationTarget.Global);
-			configuration.update("longitude", longitude, vscode.ConfigurationTarget.Global);
 			
-			// Got the values we need. Now we can force an update
-			statusBarItem.command = updateCommandId;
-			vscode.commands.executeCommand(updateCommandId);
+			// Update the two settings and when that's done, invoke the update command
+			const configuration = vscode.workspace.getConfiguration("vscode-weather-status-open-meteo");
+			configuration.update("latitude", latitude, vscode.ConfigurationTarget.Global).then( _ => {
+				configuration.update("longitude", longitude, vscode.ConfigurationTarget.Global ).then( _ => {
+					// Got the values we need. Now we can force an update
+					statusBarItem.command = updateCommandId;
+					vscode.commands.executeCommand(updateCommandId);
+				});
+			});
 		} else {
 			vscode.window.showErrorMessage('Expecting two values, latitude and longitude, separated by a comma');
 		}
