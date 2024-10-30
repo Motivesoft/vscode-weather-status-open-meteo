@@ -114,17 +114,19 @@ async function updateWeatherStatus() {
 			timeformat: "unixtime"
 		});
 		
-		// Get the programmatic value for temperature units that corresponds to the human-readable setting
+		// Get the programmatic value for temperature units that corresponds to the human-readable string
+		// we use in settings.
 		// Add it as a param if there is a value (e.g. no value required if using the default)
-		const temperatureUnitSetting = String(configuration.get("temperature_unit"));
+		const temperatureUnitSetting = String(configuration.get("temperature-unit"));
 		const temperatureUnitParam = temperatureUnitMap[temperatureUnitSetting];
 		if( temperatureUnitParam !== "") {
 			params.append("temperature_unit", temperatureUnitParam);
 		}
 	
-		// Get the programmatic value for wind speed units that corresponds to the human-readable setting
+		// Get the programmatic value for wind speed units that corresponds to the human-readable string
+		// we use in settings.
 		// Add it as a param if there is a value (e.g. no value required if using the default)
-		const windSpeedUnitSetting = String(configuration.get("wind_speed_unit"));
+		const windSpeedUnitSetting = String(configuration.get("wind-speed-unit"));
 		const windSpeedUnitParam = windSpeedUnitMap[windSpeedUnitSetting];
 		if( windSpeedUnitParam !== "") {
 			params.append("wind_speed_unit", windSpeedUnitParam);
@@ -134,6 +136,9 @@ async function updateWeatherStatus() {
 		// - whether to label display items
 		// - prompt the user if location unset
 	
+		// Request all of these items from the weather service
+		// We assemble the URL in this fashion as the commas in this 'request' get encoded if
+		// we try and use the URLSearchParams structure to inject them into the URL 
 		const request = "is_day,temperature_2m,wind_speed_10m,wind_direction_10m,relative_humidity_2m,weather_code";
 		let urlWithParams = `${baseUrl}?${params.toString()}&current=${request}`;
 	
@@ -142,6 +147,7 @@ async function updateWeatherStatus() {
 			const response = await fetch(urlWithParams);
 			
 			if (response.ok) {
+				// OK, we've received all the data, now split it out and format the values for display
 				const data = await response.json();
 	
 				const temperature = data.current.temperature_2m;
@@ -149,22 +155,39 @@ async function updateWeatherStatus() {
 	
 				const wind_speed_10m = data.current.wind_speed_10m;
 				const wind_speed_unit = data.current_units.wind_speed_10m;
+				const wind_direction_10m = data.current.wind_direction_10m;
 	
 				const updateTime = data.current.time + data.utc_offset_seconds;
 	
-				// Format the details
-				let weatherString = `${temperature}${temperature_unit} ${wind_speed_10m}${wind_speed_unit} ${data.current.relative_humidity_2m}${data.current_units.relative_humidity_2m}`;
-	
-				// If requested, and we can work one out, add a simple descriptive bit of text to describe the current conditions
+				// Check the settings to find out which of these items go into the displayed weather status value
+				// Initialize an empty string array, add items to the array based on settings and then form the array into a display string
+				let weatherItemsArray: string[] = [];
+
+				// Show the weather code as a string value ("cloudy", "rainy", ...) if we have an appropriate value for it
 				if (configuration.get("show-weather-code")) {
 					if (data.current.weather_code in wmoCodeMap) {
-						const wmoText = `${wmoCodeMap[data.current.weather_code][data.current.is_day]} `;
-						weatherString = `${wmoText}. ` + weatherString;
+						// Use the returned 'is_day' variable to display weather in context - e.g. "sunny" in daytime is "clear" at night
+						weatherItemsArray.push( `${wmoCodeMap[data.current.weather_code][data.current.is_day]}` );
 					}
 				}
 	
+				if (configuration.get("show-temperature")) {
+					weatherItemsArray.push( `${temperature}${temperature_unit}` );
+				}
+	
+				if (configuration.get("show-wind-speed")) {
+					weatherItemsArray.push( `${wind_speed_10m}${wind_speed_unit} ${wind_direction_10m}`);
+				}
+	
+				if (configuration.get("show-relative-humidity")) {
+					weatherItemsArray.push( `${data.current.relative_humidity_2m}${data.current_units.relative_humidity_2m}`);
+				}
+
+				// Join the array elements into a single string with spaces between items
+				const weatherString = weatherItemsArray.join(" ");
+	
 				statusBarItem.text = `${weatherString}`;
-				statusBarItem.tooltip = `Weather: ${weatherString}. Last updated ${new Date(updateTime*1000)}`;
+				statusBarItem.tooltip = `Weather: ${weatherString}.\nLast updated ${new Date(updateTime*1000)}`;
 			} else {
 				throw new Error(`${response.status} ${response.statusText}`);
 			}
@@ -175,7 +198,7 @@ async function updateWeatherStatus() {
 			}
 	
 			statusBarItem.text = "Weather n/a";
-			statusBarItem.tooltip = `Failed to update weather status: ${String(error)}. Click to retry.`;
+			statusBarItem.tooltip = `Failed to update weather status: ${String(error)}.\nClick to retry.`;
 		}
 	}
 

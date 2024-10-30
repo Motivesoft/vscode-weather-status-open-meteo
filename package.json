@@ -29,6 +29,21 @@
             "default": "true",
             "description": "Show a short textual description of the weather along with the numeric details."
           },
+          "vscode-weather-status-open-meteo.show-temperature": {
+            "type": "boolean",
+            "default": "true",
+            "description": "Show the current temperature."
+          },
+          "vscode-weather-status-open-meteo.show-wind-speed": {
+            "type": "boolean",
+            "default": "true",
+            "description": "Show the current wind speed and direction."
+          },
+          "vscode-weather-status-open-meteo.show-relative-humidity": {
+            "type": "boolean",
+            "default": "true",
+            "description": "Show the current relative humidity."
+          },
           "vscode-weather-status-open-meteo.info-notifications": {
             "type": "boolean",
             "default": "true",
@@ -49,7 +64,7 @@
             "default": "0",
             "description": "Longitude of the location to use in the request for weather conditions."
           },
-					"vscode-weather-status-open-meteo.temperature_unit": {
+					"vscode-weather-status-open-meteo.temperature-unit": {
 						"type": "string",
 						"default": "Celsius",
 						"enum": [ 
@@ -62,7 +77,7 @@
 						],
 						"description": "Choose the unit of measurement to use for temperatures"
 					},
-					"vscode-weather-status-open-meteo.wind_speed_unit": {
+					"vscode-weather-status-open-meteo.wind-speed-unit": {
 						"type": "string",
 						"default": "Km/h",
 						"enum": [ 
