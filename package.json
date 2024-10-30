@@ -24,32 +24,32 @@
       {
         "title": "Weather Status",
         "properties": {
-          "vscode-weather-status-open-meteo.show-weather-code": {
+          "vscode-weather-status-open-meteo.showWeatherCode": {
             "type": "boolean",
             "default": "true",
             "description": "Show a short textual description of the weather along with the numeric details."
           },
-          "vscode-weather-status-open-meteo.show-temperature": {
+          "vscode-weather-status-open-meteo.showTemperature": {
             "type": "boolean",
             "default": "true",
             "description": "Show the current temperature."
           },
-          "vscode-weather-status-open-meteo.show-wind-speed": {
+          "vscode-weather-status-open-meteo.showWindSpeed": {
             "type": "boolean",
             "default": "true",
             "description": "Show the current wind speed and direction."
           },
-          "vscode-weather-status-open-meteo.show-relative-humidity": {
+          "vscode-weather-status-open-meteo.showRelativeHumidity": {
             "type": "boolean",
             "default": "true",
             "description": "Show the current relative humidity."
           },
-          "vscode-weather-status-open-meteo.info-notifications": {
+          "vscode-weather-status-open-meteo.infoNotifications": {
             "type": "boolean",
             "default": "true",
             "description": "Show a notification when updating weather settings."
           },
-          "vscode-weather-status-open-meteo.error-notifications": {
+          "vscode-weather-status-open-meteo.errorNotifications": {
             "type": "boolean",
             "default": "true",
             "description": "Show a notification if there is a problem updating weather settings."
@@ -64,7 +64,7 @@
             "default": "0",
             "description": "Longitude of the location to use in the request for weather conditions."
           },
-					"vscode-weather-status-open-meteo.temperature-unit": {
+					"vscode-weather-status-open-meteo.temperatureUnit": {
 						"type": "string",
 						"default": "Celsius",
 						"enum": [ 
@@ -77,7 +77,7 @@
 						],
 						"description": "Choose the unit of measurement to use for temperatures"
 					},
-					"vscode-weather-status-open-meteo.wind-speed-unit": {
+					"vscode-weather-status-open-meteo.windSpeedUnit": {
 						"type": "string",
 						"default": "Km/h",
 						"enum": [ 

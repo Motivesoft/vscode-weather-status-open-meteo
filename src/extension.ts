@@ -86,7 +86,7 @@ export function deactivate() {
 async function updateWeatherStatus() {
 	const configuration = vscode.workspace.getConfiguration("vscode-weather-status-open-meteo");
 
-	if( configuration.get("notifications-info")) {
+	if( configuration.get("infoNotifications")) {
 		vscode.window.showInformationMessage('Updating weather status');
 	}
 
@@ -100,7 +100,7 @@ async function updateWeatherStatus() {
 	if( latitude === '0' || longitude === '0') {
 		// Treat this as an informational message, not an error
 		console.info( "Cannot obtain weather status: Missing latitude/longitude");
-		if( configuration.get("notifications-info")) {
+		if( configuration.get("infoNotifications")) {
 			vscode.window.showInformationMessage('Cannot obtain weather status: Missing latitude/longitude');
 		}
 
@@ -117,7 +117,7 @@ async function updateWeatherStatus() {
 		// Get the programmatic value for temperature units that corresponds to the human-readable string
 		// we use in settings.
 		// Add it as a param if there is a value (e.g. no value required if using the default)
-		const temperatureUnitSetting = String(configuration.get("temperature-unit"));
+		const temperatureUnitSetting = String(configuration.get("temperatureUnit"));
 		const temperatureUnitParam = temperatureUnitMap[temperatureUnitSetting];
 		if( temperatureUnitParam !== "") {
 			params.append("temperature_unit", temperatureUnitParam);
@@ -126,7 +126,7 @@ async function updateWeatherStatus() {
 		// Get the programmatic value for wind speed units that corresponds to the human-readable string
 		// we use in settings.
 		// Add it as a param if there is a value (e.g. no value required if using the default)
-		const windSpeedUnitSetting = String(configuration.get("wind-speed-unit"));
+		const windSpeedUnitSetting = String(configuration.get("windSpeedUnit"));
 		const windSpeedUnitParam = windSpeedUnitMap[windSpeedUnitSetting];
 		if( windSpeedUnitParam !== "") {
 			params.append("wind_speed_unit", windSpeedUnitParam);
@@ -164,22 +164,22 @@ async function updateWeatherStatus() {
 				let weatherItemsArray: string[] = [];
 
 				// Show the weather code as a string value ("cloudy", "rainy", ...) if we have an appropriate value for it
-				if (configuration.get("show-weather-code")) {
+				if (configuration.get("showWeatherCode")) {
 					if (data.current.weather_code in wmoCodeMap) {
 						// Use the returned 'is_day' variable to display weather in context - e.g. "sunny" in daytime is "clear" at night
 						weatherItemsArray.push( `${wmoCodeMap[data.current.weather_code][data.current.is_day]}` );
 					}
 				}
 	
-				if (configuration.get("show-temperature")) {
+				if (configuration.get("showTemperature")) {
 					weatherItemsArray.push( `${temperature}${temperature_unit}` );
 				}
 	
-				if (configuration.get("show-wind-speed")) {
-					weatherItemsArray.push( `${wind_speed_10m}${wind_speed_unit} ${wind_direction_10m}`);
+				if (configuration.get("showWindSpeed")) {
+					weatherItemsArray.push( `${wind_speed_10m}${wind_speed_unit} ${degreesToCompassPoint(wind_direction_10m)}`);
 				}
 	
-				if (configuration.get("show-relative-humidity")) {
+				if (configuration.get("showRelativeHumidity")) {
 					weatherItemsArray.push( `${data.current.relative_humidity_2m}${data.current_units.relative_humidity_2m}`);
 				}
 
@@ -193,7 +193,7 @@ async function updateWeatherStatus() {
 			}
 		} catch( error ) {
 			console.error(`Failed to update weather status: ${String(error)}`);
-			if( configuration.get("notifications-error")) {
+			if( configuration.get("errorNotifications")) {
 				vscode.window.showErrorMessage(`Failed to update weather status: ${String(error)}`);
 			}
 	
@@ -205,3 +205,20 @@ async function updateWeatherStatus() {
 	// Make sure the status bar item is visible
 	statusBarItem.show();
 }
+
+function degreesToCompassPoint(degrees: number): string {
+	// Normalize the degrees to be between 0 and 360
+	const normalizedDegrees = (degrees + 360) % 360;
+  
+	// Define the compass points
+	const compassPoints = [
+	  "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+	  "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"
+	];
+  
+	// Calculate the index of the compass point
+	const index = Math.round(normalizedDegrees / 22.5) % 16;
+  
+	// Return the corresponding compass point
+	return compassPoints[index];
+  }
