@@ -146,11 +146,12 @@ async function updateWeatherStatus() {
 	// Build the URL
 	const baseUrl = 'https://api.open-meteo.com/v1/forecast';
 
-	const latitude = configuration.get("latitude") as number;
-	const longitude = configuration.get("longitude") as number;
+	const latitude = configuration.get("latitude");
+	const longitude = configuration.get("longitude");
 
+	console.error(`${latitude} ${longitude}`);
 	// Try and determine whether we have a useful configuration
-	if( latitude === 0 && longitude === 0 ) {
+	if( latitude === '0' && longitude === '0' ) {
 		// Treat this as an informational message, not an error
 		console.info( "Cannot obtain weather status: Missing latitude/longitude");
 		if( configuration.get("infoNotifications")) {
