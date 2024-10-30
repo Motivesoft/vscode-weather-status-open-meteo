@@ -2,8 +2,8 @@
 
 All notable changes to the "vscode-weather-status-open-meteo" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
+## [1.0.0]
 
 - Initial release
+
+[1.0.0]: https://github.com/Motivesoft/vscode-weather-status-open-meteo/releases/tag/v1.0.0
