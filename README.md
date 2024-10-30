@@ -49,9 +49,9 @@ The extension is heavily dependent on the availability and functionality of the 
 
 ## Known Issues
 
-Currently, the extension expects the user to understand that they need to go and configure their location before the extension will display any weather details. A future version may simplify this process.
+The extension expects the user to understand that they need to go and configure their location before the extension will display any weather details. When these values are not yet configured, clicking on the status bar area for the extension will allow the user to type in the values required. This can also be done by running the `Set Weather Location` command or editing the extension's settings. 
 
-The extension is totally relient on the Open-Meteo weather service for its functionality.
+The extension is totally reliant on the Open-Meteo weather service for its functionality.
 
 ## Release Notes
 
