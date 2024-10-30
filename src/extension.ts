@@ -147,8 +147,29 @@ async function updateWeatherStatus() {
 			const response = await fetch(urlWithParams);
 			
 			if (response.ok) {
+				// These interfaces describe only the return values we are interested in, not the full API.
+				interface OpenMeteoCurrentUnits {
+					relative_humidity_2m: string, 
+					temperature_2m: string, 
+					wind_speed_10m: string, 
+				}
+				interface OpenMeteoCurrent {
+					is_day: number,	// boolean as 0 or 1
+					relative_humidity_2m: number, 
+					time: number, 
+					temperature_2m: number, 
+					weather_code: number,
+					wind_speed_10m: number, 
+					wind_direction_10m: number, 
+				}
+				interface OpenMeteoResponse {
+					current: OpenMeteoCurrent  
+					current_units: OpenMeteoCurrentUnits,
+					utc_offset_seconds: number  
+				}
+
 				// OK, we've received all the data, now split it out and format the values for display
-				const data = await response.json();
+				const data = await response.json() as OpenMeteoResponse;
 	
 				const temperature = data.current.temperature_2m;
 				const temperature_unit = data.current_units.temperature_2m;
@@ -157,6 +178,7 @@ async function updateWeatherStatus() {
 				const wind_speed_unit = data.current_units.wind_speed_10m;
 				const wind_direction_10m = data.current.wind_direction_10m;
 	
+				// This value is unixtime in seconds and so needs multiplying by 1000 if used in a Date()
 				const updateTime = data.current.time + data.utc_offset_seconds;
 	
 				// Check the settings to find out which of these items go into the displayed weather status value
@@ -186,6 +208,7 @@ async function updateWeatherStatus() {
 				// Join the array elements into a single string with spaces between items
 				const weatherString = weatherItemsArray.join(" ");
 	
+				// Update the text and tooltip.
 				statusBarItem.text = `${weatherString}`;
 				statusBarItem.tooltip = `Weather: ${weatherString}.\nLast updated ${new Date(updateTime*1000)}`;
 			} else {
