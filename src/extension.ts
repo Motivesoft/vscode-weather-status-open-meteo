@@ -1,14 +1,14 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
 let statusBarItem: vscode.StatusBarItem;
 
+// Empty string here means don't pass anything to API call
 const temperatureUnitMap: Record<string,string> = {
 	"Celsius": "",
 	"Fahrenheit" : "fahrenheit"
 };
 
+// Empty string here means don't pass anything to API call
 const windSpeedUnitMap: Record<string,string> = {
 	"Km/h": "",
 	"m/s": "ms",

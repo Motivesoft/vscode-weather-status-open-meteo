@@ -2,13 +2,33 @@
   "name": "vscode-weather-status-open-meteo",
   "displayName": "Weather Status from Open Meteo",
   "description": "Displays current weather status as obtained form Open Meteo on the status bar",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "keywords": [
+    "weather",
+    "open-meteo",
+    "meteo"
+  ],
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.94.0"
   },
   "categories": [
     "Other"
   ],
+  "license": "MIT",
+  "publisher": "Motivesoft",
+  "author": {
+    "name": "ianabrown",
+    "url": "https://github.com/ianabrown"
+  },
+  "homepage": "https://github.com/Motivesoft/vscode-weather-status-open-meteo/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Motivesoft/vscode-weather-status-open-meteo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Motivesoft/vscode-weather-status-open-meteo/issues"
+  },
   "activationEvents": [
     "onStartupFinished"
   ],
@@ -17,7 +37,7 @@
     "commands": [
       {
         "command": "vscode-weather-status-open-meteo.update",
-        "title": "Update weather status"
+        "title": "Update Weather Status"
       }
     ],
     "configuration": [
