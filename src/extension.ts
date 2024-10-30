@@ -139,30 +139,29 @@ async function setLocationConfiguration() {
 async function updateWeatherStatus() {
 	const configuration = vscode.workspace.getConfiguration("vscode-weather-status-open-meteo");
 	
-	if( configuration.get("infoNotifications")) {
-		vscode.window.showInformationMessage('Updating weather status');
-	}
-
 	// Build the URL
 	const baseUrl = 'https://api.open-meteo.com/v1/forecast';
 
 	const latitude = configuration.get("latitude");
 	const longitude = configuration.get("longitude");
 
-	console.error(`${latitude} ${longitude}`);
 	// Try and determine whether we have a useful configuration
 	if( latitude === '0' && longitude === '0' ) {
 		// Treat this as an informational message, not an error
-		console.info( "Cannot obtain weather status: Missing latitude/longitude");
+		console.info( "Weather Status needs location information to continue");
 		if( configuration.get("infoNotifications")) {
-			vscode.window.showInformationMessage('Cannot obtain weather status: Missing latitude/longitude');
+			vscode.window.showInformationMessage('Weather Status requires configuration');
 		}
 
 		statusBarItem.text = `Weather Status: Click to configure`;
-		statusBarItem.tooltip = `Weather Status: configuration required`;
+		statusBarItem.tooltip = `Weather Status: Configuration required`;
 		statusBarItem.command = setLocationCommandId;
 	} else {
-		// Ready to go
+		// Ready to query for the weather details
+		if( configuration.get("infoNotifications")) {
+			vscode.window.showInformationMessage('Updating weather status');
+		}
+	
 		const params = new URLSearchParams({
 			latitude: String(latitude),
 			longitude: String(longitude),

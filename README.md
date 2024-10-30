@@ -57,4 +57,8 @@ The extension is totally reliant on the Open-Meteo weather service for its funct
 
 ### 1.0.0
 
-Initial release
+- Initial release
+
+### 1.0.1
+
+- Improve messaging on first use
