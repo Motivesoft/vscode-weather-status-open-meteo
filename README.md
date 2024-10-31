@@ -1,20 +1,22 @@
-# vscode-weather-status-open-meteo
+# Weather Status using Open-Meteo
 
-Display current weather information on the status bar, using the excellent free weather service [Open-Meteo](https://open-meteo.com/).
+Display current weather information on the status bar using the free weather API and service from [Open-Meteo](https://open-meteo.com/).
 
 > Note: This extension is designed as an alternative to [vscode-weather-status](https://github.com/Motivesoft/vscode-weather-status), which uses a different weather service but otherwise offers similar features.
 
-> Note: To use this extension, it will be necessary to determine and configure the latitude and longitude of the location you want the weather for. This can be determined in various way, for example by using an map web application such as Google Maps.  
+> Note: To use this extension, it will be necessary to determine and configure the latitude and longitude of the location you want the weather for. This can be determined in various way, for example by using an map web application such as Google Maps.
+
+> Note: For clarity, this extension is not affiliated with Open-Meteo. It simply uses their API for weather data.
 
 ## Usage
 
-The extension will automatically start and, if configured with a latitude and longitude to use as a location, will get the current weather for that location and display it in the status bar.
+The extension will automatically start and, if configured with a latitude and longitude, will get the current weather for that location and display it in the status bar.
 
-The weather will automatically update every hour and an update can be forced by clicking on the status bar weather display.
+The weather will automatically update every hour and an update can be forced by clicking on the status bar weather display or by running the `Update Weather Status` command from the command palette.
 
-Settings can be used to control the displayed weather items and the units used for the display. See [Extension Settings](#extension-settings) for configuration details.
+Settings can be used to control the display of weather details and the units used. See [Extension Settings](#extension-settings) for configuration details.
 
-> Note: When the extension first activates, it will offer the user the chance to configure the location to use. The latitude and longitude can be set in the Settings, or by using the `Set Weather Location` command.
+> Note: When the extension first activates, it will offer the user the chance to configure the location to use by clicking the status bar area used by the extension. Alternatively, the latitude and longitude can be set in the Settings, or by using the `Set Weather Location` command.
 
 ## Features
 
@@ -24,9 +26,11 @@ Settings can be used to control the displayed weather items and the units used f
 
 ## Requirements
 
-The extension is heavily dependent on the availability and functionality of the Open-Meteo service.
+The extension is dependent on the availability and functionality of the [Open-Meteo weather forecast APi](https://open-meteo.com/en/docs).
 
 ## Extension Settings
+
+The following settings can be used to control the behaviour and display of the weather status information.
 
 | Name | Description | Default Value |
 |------|-------------|---------------|
@@ -41,24 +45,26 @@ The extension is heavily dependent on the availability and functionality of the 
 | vscode-weather-status-open-meteo.temperatureUnit | Choose the unit of measurement to use for temperatures | Celsius |
 | vscode-weather-status-open-meteo.windSpeedUnit | Choose the unit of measurement to use for wind speed | Km/h |
 
-> Note: For the `temperatureUnit` and `windSpeedUnit` properties, the default values are shown, but they also have enumerated options which are not included in this table format. The `temperatureUnit` can be either "Celsius" or "Fahrenheit", while the `windSpeedUnit` can be "Km/h", "m/s", "Mph", or "Knots".
-
-> Note: Unless the latitide and longitude are configured, the extension will not display any weather information.
+> Note: Unless the latitide and longitude are configured, the extension will not be able to obtain or display any weather information.
 
 > Note: There is a command called `Set Weather Location` that can be run from the command palette that allows configuring the latitude and longitude in a single operation.
 
 ## Known Issues
 
-The extension expects the user to understand that they need to go and configure their location before the extension will display any weather details. When these values are not yet configured, clicking on the status bar area for the extension will allow the user to type in the values required. This can also be done by running the `Set Weather Location` command or editing the extension's settings. 
+The extension requires the user to configure their location into Settings before any weather details can be displayed. If these are not configured, clicking on the status bar area for the extension will prompt the user to type in the details required. This can also be done by running the `Set Weather Location` command.
 
-The extension is totally reliant on the Open-Meteo weather service for its functionality.
+The extension is reliant on the Open-Meteo weather service for its functionality.
 
 ## Release Notes
 
-### 1.0.0
+### 1.0.2
 
-- Initial release
+- Minor documentation updates for clarity
 
 ### 1.0.1
 
 - Improve messaging on first use
+
+### 1.0.0
+
+- Initial release

@@ -1,8 +1,8 @@
 {
   "name": "vscode-weather-status-open-meteo",
-  "displayName": "Weather Status from Open Meteo",
-  "description": "Displays current weather status as obtained form Open Meteo on the status bar",
-  "version": "1.0.1",
+  "displayName": "Weather Status using Open-Meteo",
+  "description": "Displays the current weather on the status bar as obtained from Open-Meteo",
+  "version": "1.0.2",
   "keywords": [
     "weather",
     "open-meteo",
