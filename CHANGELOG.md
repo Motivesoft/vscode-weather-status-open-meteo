@@ -3,6 +3,7 @@
 ## [1.0.3]
 
 - Updated dependencies in response to [CVE-2025-25200](https://github.com/advisories/GHSA-593f-38f6-jp5m)
+- Removed debug console log message
 
 ## [1.0.2]
 

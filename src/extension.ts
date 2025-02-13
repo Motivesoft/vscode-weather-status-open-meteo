@@ -197,7 +197,6 @@ async function updateWeatherStatus() {
 		let urlWithParams = `${baseUrl}?${params.toString()}&current=${request}`;
 	
 		try {
-			console.log(`Issuing call: ${urlWithParams}`);
 			const response = await fetch(urlWithParams);
 			
 			if (response.ok) {
