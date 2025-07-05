@@ -57,6 +57,10 @@ The extension is reliant on the Open-Meteo weather service for its functionality
 
 ## Release Notes
 
+### 1.1.0
+
+- Updated dependencies
+
 ### 1.0.5
 
 - Updated dependencies in response to [CVE-2025-25200](https://github.com/advisories/GHSA-593f-38f6-jp5m)
