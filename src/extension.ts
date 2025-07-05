@@ -53,8 +53,6 @@ const wmoCodeMap: Record<number, [string, string]> = {
 };
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log('Extension "vscode-weather-status-open-meteo" is now active');
-
 	// Register the commands so that they accessible from the command palette
 	let updateCommand = vscode.commands.registerCommand(updateCommandId, () => {
 		updateWeatherStatus();
