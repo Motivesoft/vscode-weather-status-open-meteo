@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.1.2]
+
+- Updated dependencies
+
 ## [1.1.1]
 
 - Updated dependencies
@@ -25,6 +29,7 @@
 
 - Initial release
 
+[1.1.2]: https://github.com/Motivesoft/vscode-weather-status-open-meteo/releases/tag/v1.1.1
 [1.1.1]: https://github.com/Motivesoft/vscode-weather-status-open-meteo/releases/tag/v1.1.1
 [1.1.0]: https://github.com/Motivesoft/vscode-weather-status-open-meteo/releases/tag/v1.1.0
 [1.0.5]: https://github.com/Motivesoft/vscode-weather-status-open-meteo/releases/tag/v1.0.5
